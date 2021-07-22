@@ -4,6 +4,8 @@ Simple Buy-The-Dip strategy: If stock is down for 2 consecutive days, then buy
 
 import backtrader as bt
 
+STOCK = 'BAC'
+
 class BuyTheDip(bt.Strategy):
 
     def log(self, txt, dt=None):

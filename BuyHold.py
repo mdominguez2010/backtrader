@@ -3,6 +3,8 @@ Simple buy and hold strategy
 """
 import backtrader as bt
 
+STOCK = 'BAC'
+
 class BuyHold(bt.Strategy):
 
     def next(self):
