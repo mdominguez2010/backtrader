@@ -1,20 +1,14 @@
 """
-Mean reversion using Bollinger Bands
+A type of mean reversion using Bollinger Bands
 """
 
 import math
 import backtrader as bt
-from backtrader import indicators
-from backtrader.indicators.mabase import MovAv
 
 STOCK = 'SPY'
 
 class BollingerBands(bt.Strategy):
-    lines = (
-        'mid',
-        'top',
-        'bot'
-    )
+
     params = {
         ('period', 20),
         ('devfactor', 2.0),
@@ -41,7 +35,7 @@ class BollingerBands(bt.Strategy):
                 self.buy(size=self.size)
 
         if self.position.size > 0:
-            if self.data.close[0] > self.bbands.lines.bot:
+            if self.data.close[0] > self.bbands.lines.bot[0]:
                 print("Sell {} shares of {} at {}".format(self.size, self.params.ticker, self.data.close[0]))
 
                 self.close()   

@@ -1,3 +1,4 @@
+from MeanReversion import MeanReversion
 import sys
 import backtrader as bt
 import backtrader.analyzers as btanalyzers
@@ -6,6 +7,7 @@ from BuyTheDip import *
 from GoldenCross import *
 from BuyHold import *
 from BollingerBands import *
+from MeanReversion import *
 import datetime
 
 # Adds an argument to bash command 
@@ -13,7 +15,8 @@ strategies = {
     "golden_cross": GoldenCross,
     "buy_hold": BuyHold,
     "buy_dip": BuyTheDip,
-    "bbands": BollingerBands
+    "bbands": BollingerBands,
+    "mean_reversion": MeanReversion
 }
 
 parser = argparse.ArgumentParser()
