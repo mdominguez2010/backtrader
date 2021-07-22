@@ -10,7 +10,7 @@ class GoldenCross(bt.Strategy):
         ('fast', 50),
         ('slow', 200),
         ('order_percentage', 0.95),
-        ('ticker', 'MSFT')
+        ('ticker', 'QQQ')
     )
 
     def __init__(self):

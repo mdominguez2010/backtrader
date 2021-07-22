@@ -18,11 +18,12 @@ parser.add_argument("strategy", help="which strategy to run", type=str)
 args = parser.parse_args()
 
 if not args.strategy in strategies:
-    print("Invalid strategy, must be one of {}".format(strategies.keys()))
+    print("Invalid strategy and/or stock, must be one of {}".format(strategies.keys()))
     sys.exit()
 
+# Argument affects the strategy type
 STRATEGY = strategies[args.strategy]
-DATAPATH = './data/MSFT.csv'
+DATAPATH = './data/QQQ.csv'
 
 # Create a cerebro entity
 cerebro = bt.Cerebro()
@@ -30,6 +31,7 @@ cerebro = bt.Cerebro()
 # Add a strategy
 cerebro.addstrategy(STRATEGY)
 
+# Add a fixed position size
 #cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
@@ -46,7 +48,7 @@ data = bt.feeds.YahooFinanceCSVData(
 cerebro.adddata(data)
 
 # Set our desired cash start
-cerebro.broker.setcash(1000000.0)
+cerebro.broker.setcash(10000.0)
 
 # Print out the starting conditions
 beginning_cash = cerebro.broker.getvalue()
