@@ -5,13 +5,15 @@ import argparse
 from BuyTheDip import *
 from GoldenCross import *
 from BuyHold import *
+from BollingerBands import *
 import datetime
 
 # Adds an argument to bash command 
 strategies = {
     "golden_cross": GoldenCross,
     "buy_hold": BuyHold,
-    "buy_dip": BuyTheDip
+    "buy_dip": BuyTheDip,
+    "bbands": BollingerBands
 }
 
 parser = argparse.ArgumentParser()
