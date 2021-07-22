@@ -1,5 +1,6 @@
 import sys
 import backtrader as bt
+import backtrader.analyzers as btanalyzers
 import argparse
 from BuyTheDip import *
 from GoldenCross import *
@@ -23,7 +24,7 @@ if not args.strategy in strategies:
 
 # Argument affects the strategy type
 STRATEGY = strategies[args.strategy]
-DATAPATH = './data/QQQ.csv'
+DATAPATH = './data/{}.csv'.format(STOCK)
 
 # Create a cerebro entity
 cerebro = bt.Cerebro()
@@ -31,8 +32,11 @@ cerebro = bt.Cerebro()
 # Add a strategy
 cerebro.addstrategy(STRATEGY)
 
-# Add a fixed position size
-#cerebro.addsizer(bt.sizers.FixedSize, stake=100)
+# Add analyzer
+cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
+
+# # Add a fixed position size
+# cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
 data = bt.feeds.YahooFinanceCSVData(
@@ -52,15 +56,18 @@ cerebro.broker.setcash(10000.0)
 
 # Print out the starting conditions
 beginning_cash = cerebro.broker.getvalue()
-print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+print('\nStarting Portfolio Value: %.2f\n' % cerebro.broker.getvalue())
 
-# Run over everything
-cerebro.run()
+# Run everything
+thestrats = cerebro.run()
+thestrat = thestrats[0]
 
 # Print out the final result
-print('Final Portfolio Value: %.2f\n' % cerebro.broker.getvalue())
+print('\nFinal Portfolio Value: %.2f\n' % cerebro.broker.getvalue())
 ending_cash = cerebro.broker.getvalue()
 
-print(f"Total profit: {ending_cash - beginning_cash}")
+print(f"\nTotal profit: {ending_cash - beginning_cash}\n")
+
+print("Sharpe Ratio: ", thestrat.analyzers.mysharpe.get_analysis())
 
 cerebro.plot()
