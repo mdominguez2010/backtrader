@@ -1,9 +1,28 @@
+import sys
 import backtrader as bt
+import argparse
 from BuyTheDip import *
 from GoldenCross import *
+from BuyHold import *
 import datetime
 
-STRATEGY = GoldenCross
+# Adds an argument to bash command 
+strategies = {
+    "golden_cross": GoldenCross,
+    "buy_hold": BuyHold,
+    "buy_dip": BuyTheDip
+}
+
+parser = argparse.ArgumentParser()
+parser.add_argument("strategy", help="which strategy to run", type=str)
+args = parser.parse_args()
+
+if not args.strategy in strategies:
+    print("Invalid strategy, must be one of {}".format(strategies.keys()))
+    sys.exit()
+
+STRATEGY = strategies[args.strategy]
+DATAPATH = './data/MSFT.csv'
 
 # Create a cerebro entity
 cerebro = bt.Cerebro()
@@ -11,13 +30,11 @@ cerebro = bt.Cerebro()
 # Add a strategy
 cerebro.addstrategy(STRATEGY)
 
-cerebro.addsizer(bt.sizers.FixedSize, stake=100)
-
-datapath = './data/MSFT.csv'
+#cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
 data = bt.feeds.YahooFinanceCSVData(
-    dataname=datapath,
+    dataname=DATAPATH,
     # Do not pass values before this date
     fromdate=datetime.datetime(2000, 1, 1),
     # Do not pass values before this date
