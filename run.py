@@ -43,6 +43,7 @@ cerebro.addstrategy(STRATEGY)
 # Add analyzers
 cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
 cerebro.addanalyzer(btanalyzers.AnnualReturn, _name='myannualreturn')
+cerebro.addanalyzer(btanalyzers.Returns, _name='myreturn')
 cerebro.addanalyzer(btanalyzers.DrawDown, _name='mydrawdown')
 cerebro.addanalyzer(btanalyzers.Transactions, _name='mytransactions')
 
@@ -50,7 +51,7 @@ cerebro.addanalyzer(btanalyzers.Transactions, _name='mytransactions')
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
-stocks = ['SPY', 'QQQ', 'RUT', 'DIA']
+stocks = ['SPY', 'QQQ', 'RUT', 'DIA', 'AAPL', 'BAC', 'DE', 'EWZ', 'FXE', 'IBB', 'IWM', 'SLV', 'GLD', 'T', 'TSLA', 'WFC', 'FSLR', 'IBM']
 for stock in stocks:
 
     data = bt.feeds.YahooFinanceCSVData(
@@ -68,41 +69,37 @@ for stock in stocks:
 # Set our desired cash start
 cerebro.broker.setcash(10000.0)
 
-# Print out the starting conditions
+# Print out results
+print("\n*** Results ***")
 beginning_cash = cerebro.broker.getvalue()
-print('\nStarting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+print('Starting Portfolio Value: %.3f' % cerebro.broker.getvalue())
 
 # Run everything
 backtest = cerebro.run()
 backtest = backtest[0]
 
-# Print out the final results
-print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+# Final Results
+print('Final Portfolio Value: %.3f' % cerebro.broker.getvalue())
 ending_cash = cerebro.broker.getvalue()
+print(f"Total profit: %.3f" % (ending_cash - beginning_cash))
 
-print(f"Total profit: {ending_cash - beginning_cash}")
-
-print("Sharpe Ratio:", backtest.analyzers.mysharpe.get_analysis()['sharperatio'])
-
-# Calculate mean annual return
-sum_values = 0
-for val in backtest.analyzers.myannualreturn.get_analysis().values():
-    sum_values += val
-
-result = sum_values / len(backtest.analyzers.myannualreturn.get_analysis())
-
-print("\nMean annual return:", round(result, 4))
-
-# Drawdown info
-print("Max drawdown (%):", backtest.analyzers.mydrawdown.get_analysis()['max']['drawdown'])
-print("Max drawdown ($):", backtest.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
-print("Max drawdown length (days):", backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
+# Analysis
+print("\n*** Analysis ***")
+print("Sharpe Ratio: %.3f" % backtest.analyzers.mysharpe.get_analysis()['sharperatio'])
+print("Mean annual return (pct): %.2f" % backtest.analyzers.myreturn.get_analysis()['rnorm100'], "&")
+print("Max drawdown (pct): %.2f" % backtest.analyzers.mydrawdown.get_analysis()['max']['drawdown'], "%")
+print("Max drawdown ($): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
+print("Max drawdown length (days): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
 
 print("\n")
 
-print("*** Transaction breakdown ***")
+transactions = False
 
-for key in backtest.analyzers.mytransactions.get_analysis().keys():
-    print("Date:", key.date(), "| Symbol:", backtest.analyzers.mytransactions.get_analysis()[key][0][3], "| Price:", backtest.analyzers.mytransactions.get_analysis()[key][0][1], "| Type:", ["Buy" if  x < 0 else "Sell" for x in [backtest.analyzers.mytransactions.get_analysis()[key][0][4]]][0], "| N_Shares:", backtest.analyzers.mytransactions.get_analysis()[key][0][0])
+if transactions:
+    print("*** Transaction breakdown ***")
+    for key in backtest.analyzers.mytransactions.get_analysis().keys():
+        print("Date:", key.date(), "| Symbol:", backtest.analyzers.mytransactions.get_analysis()[key][0][3], "| Price:%.2f" % backtest.analyzers.mytransactions.get_analysis()[key][0][1], "| Type:", ["Buy" if  x < 0 else "Sell" for x in [backtest.analyzers.mytransactions.get_analysis()[key][0][4]]][0], "| N_Shares:", backtest.analyzers.mytransactions.get_analysis()[key][0][0])
+else:
+    print("Transactions not printed")
 
 #cerebro.plot()

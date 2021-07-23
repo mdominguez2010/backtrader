@@ -5,14 +5,11 @@ This is a good strategy for bull markets
 import math
 import backtrader as bt
 
-STOCK = 'SPY'
-
 class GoldenCross(bt.Strategy):
     params = (
         ('fast', 50),
         ('slow', 200),
         ('order_percentage', 0.90),
-        ('ticker', STOCK)
     )
 
     def __init__(self):
