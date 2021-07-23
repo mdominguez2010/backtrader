@@ -26,14 +26,14 @@ class MeanReversion(bt.Strategy):
                 amount_to_invest = (self.params.order_percentage * self.broker.cash)
                 self.size = math.floor(amount_to_invest / self.data.close)
 
-                print("Buy {} shares of {} at {}".format(self.size, self.params.ticker, self.data.close[0]))
+                print("{} Buy {} shares of {} at {}".format(self.size, self.params.ticker, self.data.close[0]))
                 
                 self.buy(size=self.size)
                 
 ######### Must find the proper selling logic
 
-        # if self.position.size > 0:
-        #     if self.pct_change[0] >= 0:
-        #         print("Sell {} shares of {} at {}".format(self.size, self.params.ticker, self.data.close[0]))
+        if self.position.size > 0:
+            if self.pct_change[0] >= 0:
+                print("Sell {} shares of {} at {}".format(self.size, self.params.ticker, self.data.close[0]))
 
-        #         self.close()   
+                self.close()   

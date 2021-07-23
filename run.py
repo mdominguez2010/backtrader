@@ -10,7 +10,7 @@ from strategies.MeanReversion import *
 import datetime
 
 # Define start year and ending year for our analysis
-FROM_YEAR = 2013
+FROM_YEAR = 2000
 TO_YEAR = 2020
 
 # Adds an argument to bash command 
