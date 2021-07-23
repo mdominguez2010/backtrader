@@ -3,9 +3,11 @@ Another type of mean reversion strategy involving pct change
 """
 
 import math
+from strategies.BuyTheDip import N_DAYS_HOLD
 import backtrader as bt
 
 STOCK = "SPY"
+N_DAYS_HOLD = 1
 
 class MeanReversion(bt.Strategy):
     
@@ -26,14 +28,23 @@ class MeanReversion(bt.Strategy):
                 amount_to_invest = (self.params.order_percentage * self.broker.cash)
                 self.size = math.floor(amount_to_invest / self.data.close)
 
-                print("{} Buy {} shares of {} at {}".format(self.size, self.params.ticker, self.data.close[0]))
+                print("{} Buy {} shares of {} at {}".format(
+                    self.datas[0].datetime.date(0),
+                    self.size,
+                    self.params.ticker, 
+                    
+                    self.data.close[0]))
                 
                 self.buy(size=self.size)
                 
 ######### Must find the proper selling logic
 
         if self.position.size > 0:
-            if self.pct_change[0] >= 0:
-                print("Sell {} shares of {} at {}".format(self.size, self.params.ticker, self.data.close[0]))
+            if len(self) >= (self.bar_executed + N_DAYS_HOLD):
+                print("{} Sell {} shares of {} at {}".format(
+                    self.datas[0].datetime.date(0),
+                    self.size,
+                    self.params.ticker,
+                    self.data.close[0]))
 
                 self.close()   
