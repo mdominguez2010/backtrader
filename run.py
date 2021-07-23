@@ -40,8 +40,10 @@ cerebro = bt.Cerebro()
 # Add a strategy
 cerebro.addstrategy(STRATEGY)
 
-# Add analyzer
+# Add analyzers
 cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
+cerebro.addanalyzer(btanalyzers.AnnualReturn, _name='myannualreturn')
+cerebro.addanalyzer(btanalyzers.DrawDown, _name='mydrawdown')
 
 # # Add a fixed position size
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
@@ -67,15 +69,31 @@ beginning_cash = cerebro.broker.getvalue()
 print('\nStarting Portfolio Value: %.2f\n' % cerebro.broker.getvalue())
 
 # Run everything
-thestrats = cerebro.run()
-thestrat = thestrats[0]
+backtest = cerebro.run()
+backtest = backtest[0]
 
-# Print out the final result
+# Print out the final results
 print('\nFinal Portfolio Value: %.2f\n' % cerebro.broker.getvalue())
 ending_cash = cerebro.broker.getvalue()
 
 print(f"\nTotal profit: {ending_cash - beginning_cash}\n")
 
-print("Sharpe Ratio: ", thestrat.analyzers.mysharpe.get_analysis())
+print("Sharpe Ratio: ", backtest.analyzers.mysharpe.get_analysis()['sharperatio'])
+
+# Calculate mean annual return
+sum_values = 0
+for val in backtest.analyzers.myannualreturn.get_analysis().values():
+    sum_values += val
+
+result = sum_values / len(backtest.analyzers.myannualreturn.get_analysis())
+
+print("\nMean annual return: ", round(result, 4))
+
+# Drawdown info
+print("\nMax drawdown (%): ", backtest.analyzers.mydrawdown.get_analysis()['max']['drawdown'])
+print("Max drawdown ($): ", backtest.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
+print("Max drawdown length", backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
+
+print("\n")
 
 cerebro.plot()
