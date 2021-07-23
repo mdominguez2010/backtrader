@@ -24,7 +24,7 @@ class MeanReversion(bt.Strategy):
 
     def next(self):
         if self.position.size == 0:
-            if self.pct_change[0] <= -0.06:
+            if self.pct_change[0] <= -0.04:
                 amount_to_invest = (self.params.order_percentage * self.broker.cash)
                 self.size = math.floor(amount_to_invest / self.data.close)
 
@@ -37,10 +37,10 @@ class MeanReversion(bt.Strategy):
                 
                 self.buy(size=self.size)
                 
-######### Must find the proper selling logic
+######### Must find the proper selling logic #########
 
         if self.position.size > 0:
-            if len(self) >= (self.bar_executed + N_DAYS_HOLD):
+            if self.pct_change[0] > 0.01:
                 print("{} Sell {} shares of {} at {}".format(
                     self.datas[0].datetime.date(0),
                     self.size,

@@ -6,6 +6,8 @@ import math
 import backtrader as bt
 
 STOCK = 'SPY'
+PCT_DIP = 0.01
+PCT_JUMP = 0.05
 
 class BollingerBands(bt.Strategy):
 
@@ -26,7 +28,7 @@ class BollingerBands(bt.Strategy):
 
     def next(self):
         if self.position.size == 0:
-            if self.data.close[0] <= self.bbands.lines.bot[0]:
+            if self.data.close[0] <= ((1 - PCT_DIP) * self.bbands.lines.bot[0]):
                 amount_to_invest = (self.params.order_percentage * self.broker.cash)
                 self.size = math.floor(amount_to_invest / self.data.close)
 
@@ -35,7 +37,7 @@ class BollingerBands(bt.Strategy):
                 self.buy(size=self.size)
 
         if self.position.size > 0:
-            if self.data.close[0] > self.bbands.lines.bot[0]:
+            if self.data.close[0] > ((1 + PCT_JUMP) * self.bbands.lines.bot[0]):
                 print("Sell {} shares of {} at {}".format(self.size, self.params.ticker, self.data.close[0]))
 
                 self.close()   
