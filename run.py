@@ -32,7 +32,7 @@ if not args.strategy in strategies:
 
 # Argument affects the strategy type
 STRATEGY = strategies[args.strategy]
-DATAPATH = './data/{}.csv'.format(STOCK)
+#DATAPATH = './data/{}.csv'.format(STOCK)
 
 # Create a cerebro entity
 cerebro = bt.Cerebro()
@@ -44,41 +44,45 @@ cerebro.addstrategy(STRATEGY)
 cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
 cerebro.addanalyzer(btanalyzers.AnnualReturn, _name='myannualreturn')
 cerebro.addanalyzer(btanalyzers.DrawDown, _name='mydrawdown')
+cerebro.addanalyzer(btanalyzers.Transactions, _name='mytransactions')
 
 # # Add a fixed position size
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
-data = bt.feeds.YahooFinanceCSVData(
-    dataname=DATAPATH,
-    # Do not pass values before this date
-    fromdate=datetime.datetime(FROM_YEAR, 1, 1),
-    # Do not pass values before this date
-    todate=datetime.datetime(TO_YEAR, 12, 31),
-    # Do not pass values after this date
-    reverse=False)
+stocks = ['SPY', 'QQQ', 'RUT', 'DIA']
+for stock in stocks:
 
-# Add the Data Feed to Cerebro
-cerebro.adddata(data)
+    data = bt.feeds.YahooFinanceCSVData(
+        dataname='./data/{}.csv'.format(stock),
+        # Do not pass values before this date
+        fromdate=datetime.datetime(FROM_YEAR, 1, 1),
+        # Do not pass values before this date
+        todate=datetime.datetime(TO_YEAR, 12, 31),
+        # Do not pass values after this date
+        reverse=False)
+
+    # Add the Data Feed to Cerebro
+    cerebro.adddata(data, name=stock)
 
 # Set our desired cash start
 cerebro.broker.setcash(10000.0)
 
 # Print out the starting conditions
 beginning_cash = cerebro.broker.getvalue()
-print('\nStarting Portfolio Value: %.2f\n' % cerebro.broker.getvalue())
+print('\nStarting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
 # Run everything
 backtest = cerebro.run()
 backtest = backtest[0]
 
 # Print out the final results
-print('\nFinal Portfolio Value: %.2f\n' % cerebro.broker.getvalue())
+print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
 ending_cash = cerebro.broker.getvalue()
 
-print(f"\nTotal profit: {ending_cash - beginning_cash}\n")
+print(f"Total profit: {ending_cash - beginning_cash}")
 
-print("Sharpe Ratio: ", backtest.analyzers.mysharpe.get_analysis()['sharperatio'])
+print("Sharpe Ratio:", backtest.analyzers.mysharpe.get_analysis()['sharperatio'])
 
 # Calculate mean annual return
 sum_values = 0
@@ -87,13 +91,18 @@ for val in backtest.analyzers.myannualreturn.get_analysis().values():
 
 result = sum_values / len(backtest.analyzers.myannualreturn.get_analysis())
 
-print("\nMean annual return: ", round(result, 4))
+print("\nMean annual return:", round(result, 4))
 
 # Drawdown info
-print("\nMax drawdown (%): ", backtest.analyzers.mydrawdown.get_analysis()['max']['drawdown'])
-print("Max drawdown ($): ", backtest.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
-print("Max drawdown length", backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
+print("Max drawdown (%):", backtest.analyzers.mydrawdown.get_analysis()['max']['drawdown'])
+print("Max drawdown ($):", backtest.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
+print("Max drawdown length (days):", backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
 
 print("\n")
 
-cerebro.plot()
+print("*** Transaction breakdown ***")
+
+for key in backtest.analyzers.mytransactions.get_analysis().keys():
+    print("Date:", key.date(), "| Symbol:", backtest.analyzers.mytransactions.get_analysis()[key][0][3], "| Price:", backtest.analyzers.mytransactions.get_analysis()[key][0][1], "| Type:", ["Buy" if  x < 0 else "Sell" for x in [backtest.analyzers.mytransactions.get_analysis()[key][0][4]]][0], "| N_Shares:", backtest.analyzers.mytransactions.get_analysis()[key][0][0])
+
+#cerebro.plot()
