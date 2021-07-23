@@ -1,10 +1,12 @@
 """
-Simple Buy-The-Dip strategy: If stock is down for 2 consecutive days, then buy
+Simple Buy-The-Dip strategy: If stock is down for 3 consecutive days, then buy
+Sell after desired number of days.
 """
 
 import backtrader as bt
 
-STOCK = 'BAC'
+STOCK = 'SPY'
+N_DAYS_HOLD = 5
 
 class BuyTheDip(bt.Strategy):
 
@@ -46,11 +48,13 @@ class BuyTheDip(bt.Strategy):
                 if self.dataclose[-1] < self.dataclose[-2]:
                     # previous close less than the previous close
 
-                    # BUY, BUY, BUY!!! (with all possible default parameters)
-                    self.log('BUY CREATE, %.2f' % self.dataclose[0])
-                    self.order = self.buy()
+                    if self.dataclose[-2] < self.dataclose[-3]:
+
+                        # BUY, BUY, BUY!!! (with all possible default parameters)
+                        self.log('BUY CREATE, %.2f' % self.dataclose[0])
+                        self.order = self.buy()
 
         else:
-            if len(self) >= (self.bar_executed + 5):
+            if len(self) >= (self.bar_executed + N_DAYS_HOLD):
                 self.log("SELL CREATED {}".format(self.dataclose[0]))
                 self.order = self.sell()

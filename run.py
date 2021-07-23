@@ -1,14 +1,17 @@
-from MeanReversion import MeanReversion
 import sys
 import backtrader as bt
 import backtrader.analyzers as btanalyzers
 import argparse
-from BuyTheDip import *
-from GoldenCross import *
-from BuyHold import *
-from BollingerBands import *
-from MeanReversion import *
+from strategies.BuyTheDip import *
+from strategies.GoldenCross import *
+from strategies.BuyHold import *
+from strategies.BollingerBands import *
+from strategies.MeanReversion import *
 import datetime
+
+# Define start year and ending year for our analysis
+FROM_YEAR = 2013
+TO_YEAR = 2020
 
 # Adds an argument to bash command 
 strategies = {
@@ -47,9 +50,9 @@ cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
 data = bt.feeds.YahooFinanceCSVData(
     dataname=DATAPATH,
     # Do not pass values before this date
-    fromdate=datetime.datetime(2000, 1, 1),
+    fromdate=datetime.datetime(FROM_YEAR, 1, 1),
     # Do not pass values before this date
-    todate=datetime.datetime(2020, 12, 31),
+    todate=datetime.datetime(TO_YEAR, 12, 31),
     # Do not pass values after this date
     reverse=False)
 
