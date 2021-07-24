@@ -51,7 +51,7 @@ cerebro.addanalyzer(btanalyzers.Transactions, _name='mytransactions')
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
-stocks = ['SPY', 'QQQ', 'RUT', 'DIA', 'AAPL', 'BAC', 'DE', 'EWZ', 'FXE', 'IBB', 'IWM', 'SLV', 'GLD', 'T', 'TSLA', 'WFC', 'FSLR', 'IBM']
+stocks = ['SPY', 'QQQ', 'DIA', 'AAPL', 'BAC', 'DE', 'EWZ', 'FXE', 'IBB', 'IWM', 'SLV', 'GLD', 'T', 'TSLA', 'WFC', 'FSLR', 'IBM', 'MSFT', 'V', 'NFLX', 'PYPL']
 for stock in stocks:
 
     data = bt.feeds.YahooFinanceCSVData(
