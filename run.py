@@ -100,8 +100,26 @@ backtest = backtest[0]
 print('Final Portfolio Value: %.3f' % cerebro.broker.getvalue())
 ending_cash = cerebro.broker.getvalue()
 print(f"Total profit: %.3f" % (ending_cash - beginning_cash))
-print(backtest.analyzers.myanalyzer.get_analysis()['total']['total'], 'total transactions,', backtest.analyzers.myanalyzer.get_analysis()['total']['open'], 'open,', backtest.analyzers.myanalyzer.get_analysis()['total']['closed'], 'closed')
+print(backtest.analyzers.myanalyzer.get_analysis()['total']['total'], 'total transactions,', backtest.analyzers.myanalyzer.get_analysis()['total']['open'], 'open,', backtest.analyzers.myanalyzer.get_analysis()['total']['closed'], 'closed\n')
 
+# for key in backtest.analyzers.myanalyzer.get_analysis().keys():
+#     print(key)
+
+print("*** Streak ***")
+print("Current win streak: ", backtest.analyzers.myanalyzer.get_analysis()['streak']['won']['current'])
+print("Longest win streak: ", backtest.analyzers.myanalyzer.get_analysis()['streak']['won']['longest'])
+
+print("\n*** PnL ***")
+print("Total Gross: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['gross']['total'])
+print("Average Gross: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['gross']['average'])
+print("Total Net: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['net']['total'])
+print("Average Net: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['net']['average'])
+
+print("*** Won ***")
+print("*** Lost ***")
+print("*** Long ***")
+print("*** Short ***")
+print("*** len ***")
 
 # Analysis
 print("\n*** Analysis ***")
@@ -113,8 +131,7 @@ print("Max drawdown ($): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['m
 print("Max drawdown length (days): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
 print("\n")
 
-transactions = True
-plot = False
+transactions = False
 
 if transactions:
     print("*** Transaction breakdown ***")
@@ -122,7 +139,3 @@ if transactions:
         print("Date:", key.date(), "| Symbol:", backtest.analyzers.mytransactions.get_analysis()[key][0][3], "| Price:%.2f" % backtest.analyzers.mytransactions.get_analysis()[key][0][1], "| Type:", ["Buy" if  x < 0 else "Sell" for x in [backtest.analyzers.mytransactions.get_analysis()[key][0][4]]][0], "| N_Shares:", backtest.analyzers.mytransactions.get_analysis()[key][0][0])
 else:
     print("Transactions not printed")
-
-if plot:
-    cerebro.plot()
-    
