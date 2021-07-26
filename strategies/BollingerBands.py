@@ -14,7 +14,7 @@ class BollingerBands(bt.Strategy):
     params = {
         ('period', 20),
         ('devfactor', 2.0),
-        ('order_percentage', 0.90),
+        ('order_percentage', 0.05),
         ('ticker', STOCK)
     }
 

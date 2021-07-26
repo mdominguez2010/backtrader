@@ -48,8 +48,6 @@ def save_csv(dataframe, stock):
     """
     dataframe.to_csv(f"./data/{stock}.csv", index=False)
 
-### Run this on multiple stocks ###
-
 if __name__ == '__main__':
 
     api_key = 'VHOI1ERJ34C0FKHZ'
@@ -69,21 +67,14 @@ if __name__ == '__main__':
         'TSLA', 'TWTR', 'V', 'VXX', 'VZ',
         'WFC', 'WMT', 'X', 'XLF', 'XLV']
 
-    stocks = [
-        'WFC']
+    for stock in stock_list:
 
-    for stock in stocks:
-
-        try:
-            data = get_price_data(api_key, stock)
-            
-            dataframe = create_dataframe(data)
-
-            save_csv(dataframe, stock)
+        data = get_price_data(api_key, stock)
         
-        except KeyError:
-            pass
+        dataframe = create_dataframe(data)
 
+        save_csv(dataframe, stock)
+        
     ### API call on RUT not working ###
     # data = get_price_data(api_key, 'RUT')
     # print(data)

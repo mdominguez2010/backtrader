@@ -46,27 +46,29 @@ cerebro.addanalyzer(btanalyzers.AnnualReturn, _name='myannualreturn')
 cerebro.addanalyzer(btanalyzers.Returns, _name='myreturn')
 cerebro.addanalyzer(btanalyzers.DrawDown, _name='mydrawdown')
 cerebro.addanalyzer(btanalyzers.Transactions, _name='mytransactions')
+cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='myanalyzer')
+cerebro.addanalyzer(btanalyzers.VWR, _name='myvwr')
 
 # # Add a fixed position size
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
-stock_set = {
-    'SPY', 'QQQ', 'DIA', 'AAPL', 'XLV',
-    'BAC', 'DE', 'EWZ', 'FXE', 'IBB',
-    'IWM', 'SLV', 'GLD', 'T', 'TSLA',
-    'WFC', 'FSLR', 'IBM', 'MSFT', 'V',
-    'NFLX', 'PYPL', 'COF', 'EEM', 'AMZN',
-    'EWW', 'FXI', 'RSX', 'TLT', 'TBT'
-    'XLF', 'VXX', 'CCL', 'M', 'JNK',
-    'NKE', 'BBY', 'GPS', 'TGT', 'WMT',
-    'BABA', 'LOW', 'X', 'BA', 'RACE',
-    'CPB', 'K', 'KO', 'HD', 'JD',
-    'KR', 'MGM', 'JNJ', 'MS', 'CAH',
-    'VZ', 'AAL', 'JPM', 'TWTR', 'F',
-    'C', 'LVS', 'COP', 'CVX', 'CVS'}
+stock_list = [
+    'AAL', 'AAPL', 'AMZN', 'BA', 'BABA',
+    'BAC', 'BBY', 'C', 'CAH', 'CCL',
+    'COF', 'COP', 'CPB', 'CVS', 'CVX',
+    'DE', 'DIA', 'EEM', 'EWW', 'EWZ',
+    'F', 'FSLR', 'FXE', 'FXI', 'GLD',
+    'GPS', 'HD', 'IBB', 'IBM', 'IWM',
+    'JD', 'JNJ', 'JNK', 'JPM', 'K',
+    'KO', 'KR', 'LOW', 'LVS', 'M',
+    'MGM', 'MS', 'MSFT', 'NFLX', 'NKE',
+    'PYPL', 'QQQ', 'RACE', 'RSX', 'SLV',
+    'SPY', 'T', 'TBT', 'TGT', 'TLT',
+    'TSLA', 'TWTR', 'V', 'VXX', 'VZ',
+    'WFC', 'WMT', 'X', 'XLF', 'XLV']
 
-for stock in stock_set:
+for stock in stock_list:
 
     data = bt.feeds.YahooFinanceCSVData(
         dataname='./data/{}.csv'.format(stock),
@@ -81,7 +83,7 @@ for stock in stock_set:
     cerebro.adddata(data, name=stock)
 
 # Set our desired cash start
-cerebro.broker.setcash(10000.0)
+cerebro.broker.setcash(1000000.0)
 
 # Print out results
 print("\n*** Results ***")
@@ -96,15 +98,17 @@ backtest = backtest[0]
 print('Final Portfolio Value: %.3f' % cerebro.broker.getvalue())
 ending_cash = cerebro.broker.getvalue()
 print(f"Total profit: %.3f" % (ending_cash - beginning_cash))
+print(backtest.analyzers.myanalyzer.get_analysis()['total']['total'], 'total transactions,', backtest.analyzers.myanalyzer.get_analysis()['total']['open'], 'open,', backtest.analyzers.myanalyzer.get_analysis()['total']['closed'], 'closed')
+
 
 # Analysis
 print("\n*** Analysis ***")
 print("Sharpe Ratio: %.3f" % backtest.analyzers.mysharpe.get_analysis()['sharperatio'])
+print("Variability-Weighted Return: %.3f" % backtest.analyzers.myvwr.get_analysis()['vwr'])
 print("Mean annual return (pct): %.2f" % backtest.analyzers.myreturn.get_analysis()['rnorm100'], "&")
 print("Max drawdown (pct): %.2f" % backtest.analyzers.mydrawdown.get_analysis()['max']['drawdown'], "%")
 print("Max drawdown ($): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
 print("Max drawdown length (days): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
-
 print("\n")
 
 transactions = False
