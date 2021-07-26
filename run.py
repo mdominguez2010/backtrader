@@ -5,6 +5,7 @@ import argparse
 from strategies.BuyTheDip import *
 from strategies.GoldenCross import *
 from strategies.BuyHold import *
+from strategies.BuyTheDip1 import *
 from strategies.BollingerBands import *
 from strategies.MeanReversion import *
 import datetime
@@ -18,6 +19,7 @@ strategies = {
     "golden_cross": GoldenCross,
     "buy_hold": BuyHold,
     "buy_dip": BuyTheDip,
+    "buy_dip1": BuyTheDip1,
     "bbands": BollingerBands,
     "mean_reversion": MeanReversion
 }
@@ -83,7 +85,7 @@ for stock in stock_list:
     cerebro.adddata(data, name=stock)
 
 # Set our desired cash start
-cerebro.broker.setcash(1000000.0)
+cerebro.broker.setcash(6000.0)
 
 # Print out results
 print("\n*** Results ***")
@@ -111,7 +113,8 @@ print("Max drawdown ($): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['m
 print("Max drawdown length (days): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
 print("\n")
 
-transactions = False
+transactions = True
+plot = False
 
 if transactions:
     print("*** Transaction breakdown ***")
@@ -120,4 +123,6 @@ if transactions:
 else:
     print("Transactions not printed")
 
-#cerebro.plot()
+if plot:
+    cerebro.plot()
+    
