@@ -53,25 +53,28 @@ def save_csv(dataframe, stock):
 if __name__ == '__main__':
 
     api_key = 'VHOI1ERJ34C0FKHZ'
-    stock_set = {
-        'SPY', 'QQQ', 'DIA', 'AAPL', 'XLV',
-        'BAC', 'DE', 'EWZ', 'FXE', 'IBB',
-        'IWM', 'SLV', 'GLD', 'T', 'TSLA',
-        'WFC', 'FSLR', 'IBM', 'MSFT', 'V',
-        'NFLX', 'PYPL', 'COF', 'EEM', 'AMZN',
-        'EWW', 'FXI', 'RSX', 'TLT', 'TBT'
-        'XLF', 'VXX', 'CCL', 'M', 'JNK',
-        'NKE', 'BBY', 'GPS', 'TGT', 'WMT',
-        'BABA', 'LOW', 'X', 'BA', 'RACE',
-        'CPB', 'K', 'KO', 'HD', 'JD',
-        'KR', 'MGM', 'JNJ', 'MS', 'CAH',
-        'VZ', 'AAL', 'JPM', 'TWTR', 'F',
-        'C', 'LVS', 'COP', 'CVX', 'CVS'}
 
-    for stock in stock_set:
+    stock_list = [
+        'AAL', 'AAPL', 'AMZN', 'BA', 'BABA',
+        'BAC', 'BBY', 'C', 'CAH', 'CCL',
+        'COF', 'COP', 'CPB', 'CVS', 'CVX',
+        'DE', 'DIA', 'EEM', 'EWW', 'EWZ',
+        'F', 'FSLR', 'FXE', 'FXI', 'GLD',
+        'GPS', 'HD', 'IBB', 'IBM', 'IWM',
+        'JD', 'JNJ', 'JNK', 'JPM', 'K',
+        'KO', 'KR', 'LOW', 'LVS', 'M',
+        'MGM', 'MS', 'MSFT', 'NFLX', 'NKE',
+        'PYPL', 'QQQ', 'RACE', 'RSX', 'SLV',
+        'SPY', 'T', 'TBT', 'TGT', 'TLT',
+        'TSLA', 'TWTR', 'V', 'VXX', 'VZ',
+        'WFC', 'WMT', 'X', 'XLF', 'XLV']
+
+    stocks = [
+        'WFC']
+
+    for stock in stocks:
 
         try:
-
             data = get_price_data(api_key, stock)
             
             dataframe = create_dataframe(data)
@@ -79,7 +82,6 @@ if __name__ == '__main__':
             save_csv(dataframe, stock)
         
         except KeyError:
-
             pass
 
     ### API call on RUT not working ###
