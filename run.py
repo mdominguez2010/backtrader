@@ -105,7 +105,7 @@ print(backtest.analyzers.myanalyzer.get_analysis()['total']['total'], 'total tra
 print("\n*** Analysis ***")
 print("Sharpe Ratio: %.3f" % backtest.analyzers.mysharpe.get_analysis()['sharperatio'])
 print("Variability-Weighted Return: %.3f" % backtest.analyzers.myvwr.get_analysis()['vwr'])
-print("Mean annual return (pct): %.2f" % backtest.analyzers.myreturn.get_analysis()['rnorm100'], "&")
+print("Mean annual return (pct): %.2f" % backtest.analyzers.myreturn.get_analysis()['rnorm100'], "%")
 print("Max drawdown (pct): %.2f" % backtest.analyzers.mydrawdown.get_analysis()['max']['drawdown'], "%")
 print("Max drawdown ($): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
 print("Max drawdown length (days): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
