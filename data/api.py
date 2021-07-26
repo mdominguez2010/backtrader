@@ -22,7 +22,7 @@ def create_dataframe(data):
     Puts the price data into a dataframe and cleans it
     """
     # Put data into dataframe
-    dataframe = pd.DataFrame(columns=['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'])       
+    dataframe = pd.DataFrame(columns=['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'])
 
     for key in data["Time Series (Daily)"].keys():
         dataframe = dataframe.append(
@@ -53,20 +53,34 @@ def save_csv(dataframe, stock):
 if __name__ == '__main__':
 
     api_key = 'VHOI1ERJ34C0FKHZ'
-    stock_list = stocks = [
-        'SPY', 'QQQ', 'DIA', 'AAPL',
+    stock_set = {
+        'SPY', 'QQQ', 'DIA', 'AAPL', 'XLV',
         'BAC', 'DE', 'EWZ', 'FXE', 'IBB',
         'IWM', 'SLV', 'GLD', 'T', 'TSLA',
         'WFC', 'FSLR', 'IBM', 'MSFT', 'V',
-        'NFLX', 'PYPL']
+        'NFLX', 'PYPL', 'COF', 'EEM', 'AMZN',
+        'EWW', 'FXI', 'RSX', 'TLT', 'TBT'
+        'XLF', 'VXX', 'CCL', 'M', 'JNK',
+        'NKE', 'BBY', 'GPS', 'TGT', 'WMT',
+        'BABA', 'LOW', 'X', 'BA', 'RACE',
+        'CPB', 'K', 'KO', 'HD', 'JD',
+        'KR', 'MGM', 'JNJ', 'MS', 'CAH',
+        'VZ', 'AAL', 'JPM', 'TWTR', 'F',
+        'C', 'LVS', 'COP', 'CVX', 'CVS'}
 
-    for stock in stock_list:
+    for stock in stock_set:
 
-        data = get_price_data(api_key, stock)
+        try:
+
+            data = get_price_data(api_key, stock)
+            
+            dataframe = create_dataframe(data)
+
+            save_csv(dataframe, stock)
         
-        dataframe = create_dataframe(data)
+        except KeyError:
 
-        save_csv(dataframe, stock)
+            pass
 
     ### API call on RUT not working ###
     # data = get_price_data(api_key, 'RUT')
