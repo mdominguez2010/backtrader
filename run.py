@@ -51,8 +51,22 @@ cerebro.addanalyzer(btanalyzers.Transactions, _name='mytransactions')
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
-stocks = ['SPY', 'QQQ', 'DIA', 'AAPL', 'BAC', 'DE', 'EWZ', 'FXE', 'IBB', 'IWM', 'SLV', 'GLD', 'T', 'TSLA', 'WFC', 'FSLR', 'IBM', 'MSFT', 'V', 'NFLX', 'PYPL']
-for stock in stocks:
+stock_set = {
+    'SPY', 'QQQ', 'DIA', 'AAPL', 'XLV',
+    'BAC', 'DE', 'EWZ', 'FXE', 'IBB',
+    'IWM', 'SLV', 'GLD', 'T', 'TSLA',
+    'WFC', 'FSLR', 'IBM', 'MSFT', 'V',
+    'NFLX', 'PYPL', 'COF', 'EEM', 'AMZN',
+    'EWW', 'FXI', 'RSX', 'TLT', 'TBT'
+    'XLF', 'VXX', 'CCL', 'M', 'JNK',
+    'NKE', 'BBY', 'GPS', 'TGT', 'WMT',
+    'BABA', 'LOW', 'X', 'BA', 'RACE',
+    'CPB', 'K', 'KO', 'HD', 'JD',
+    'KR', 'MGM', 'JNJ', 'MS', 'CAH',
+    'VZ', 'AAL', 'JPM', 'TWTR', 'F',
+    'C', 'LVS', 'COP', 'CVX', 'CVS'}
+
+for stock in stock_set:
 
     data = bt.feeds.YahooFinanceCSVData(
         dataname='./data/{}.csv'.format(stock),
