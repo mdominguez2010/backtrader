@@ -5,7 +5,7 @@ import argparse
 from strategies.BuyTheDip import *
 from strategies.GoldenCross import *
 from strategies.BuyHold import *
-from strategies.BuyTheDip1 import *
+from strategies.Ichimoku import *
 from strategies.BollingerBands import *
 from strategies.MeanReversion import *
 import datetime
@@ -14,16 +14,19 @@ import time
 # Time it
 start = time.time()
 
+transactions = False
+plot = False
+
 # Define start year and ending year for our analysis
 FROM_YEAR = 2000
-TO_YEAR = 2020
+TO_YEAR = 2021
 
 # Adds an argument to bash command 
 strategies = {
     "golden_cross": GoldenCross,
     "buy_hold": BuyHold,
     "buy_dip": BuyTheDip,
-    "buy_dip1": BuyTheDip1,
+    "ichimoku": Ichimoku,
     "bbands": BollingerBands,
     "mean_reversion": MeanReversion
 }
@@ -54,11 +57,13 @@ cerebro.addanalyzer(btanalyzers.DrawDown, _name='mydrawdown')
 cerebro.addanalyzer(btanalyzers.Transactions, _name='mytransactions')
 cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='myanalyzer')
 cerebro.addanalyzer(btanalyzers.VWR, _name='myvwr')
+cerebro.addanalyzer(btanalyzers.SQN, _name='mysqn')
 
 # # Add a fixed position size
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
+# stock_list = ['WFC']
 stock_list = [
     'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
     'BABA', 'BAC', 'BBY', 'BIDU', 'BLK',
@@ -88,7 +93,7 @@ for stock in stock_list:
         # Do not pass values before this date
         fromdate=datetime.datetime(FROM_YEAR, 1, 1),
         # Do not pass values before this date
-        todate=datetime.datetime(TO_YEAR, 12, 31),
+        todate=datetime.datetime(TO_YEAR, 7, 26),
         # Do not pass values after this date
         reverse=False)
 
@@ -112,9 +117,6 @@ print('Final Portfolio Value: %.3f' % cerebro.broker.getvalue())
 ending_cash = cerebro.broker.getvalue()
 print(f"Total profit: %.3f" % (ending_cash - beginning_cash))
 print(backtest.analyzers.myanalyzer.get_analysis()['total']['total'], 'total transactions,', backtest.analyzers.myanalyzer.get_analysis()['total']['open'], 'open,', backtest.analyzers.myanalyzer.get_analysis()['total']['closed'], 'closed\n')
-
-# for key in backtest.analyzers.myanalyzer.get_analysis().keys():
-#     print(key)
 
 print("*** Streak ***")
 print("Current win streak: ", backtest.analyzers.myanalyzer.get_analysis()['streak']['won']['current'])
@@ -172,17 +174,19 @@ print("Mean annual return (pct): %.2f" % backtest.analyzers.myreturn.get_analysi
 print("Max drawdown (pct): %.2f" % backtest.analyzers.mydrawdown.get_analysis()['max']['drawdown'], "%")
 print("Max drawdown ($): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
 print("Max drawdown length (days): %.0f" % backtest.analyzers.mydrawdown.get_analysis()['max']['len'])
+print("SQN: %.3f" % backtest.analyzers.mysqn.get_analysis()['sqn']) # As defined by Van K: scaled of 1 (below avg) to 7 (Holy Grail)
 print("\n")
 
-transactions = False
-
 if transactions:
-    print("*** Transaction breakdown ***")
+    print("*** Transactions ***")
     for key in backtest.analyzers.mytransactions.get_analysis().keys():
         print("Date:", key.date(), "| Symbol:", backtest.analyzers.mytransactions.get_analysis()[key][0][3], "| Price:%.2f" % backtest.analyzers.mytransactions.get_analysis()[key][0][1], "| Type:", ["Buy" if  x < 0 else "Sell" for x in [backtest.analyzers.mytransactions.get_analysis()[key][0][4]]][0], "| N_Shares:", backtest.analyzers.mytransactions.get_analysis()[key][0][0])
 else:
     print("Transactions not printed")
 
+if plot:
+    cerebro.plot()
+
 end = time.time()
-time_elapsed = end - start
-print(f"The program took {round(time_elapsed, 2)} seconds to execute")
+run_time = end - start
+print("Program run time: %.2f" % run_time, "seconds\n")

@@ -50,6 +50,8 @@ def save_csv(dataframe, stock):
 
 if __name__ == '__main__':
 
+    start = time.time()
+
     api_key = 'VHOI1ERJ34C0FKHZ'
 
     stock_list = [
@@ -83,6 +85,12 @@ if __name__ == '__main__':
         save_csv(dataframe, stock)
 
         time.sleep(5) # To avoid the program from stopping
+
+    end = time.time()
+
+    run_time = end - start
+
+    print("\nProgram run time: %.2f" % run_time, "seconds\n")
         
     ### API call on RUT not working ###
     # data = get_price_data(api_key, 'RUT')

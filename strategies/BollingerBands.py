@@ -17,6 +17,7 @@ class BollingerBands(bt.Strategy):
     }
 
     def __init__(self):
+
         self.bbands_list = []
 
         for d in self.datas:
@@ -31,6 +32,7 @@ class BollingerBands(bt.Strategy):
             self.bbands_list.append(self.bbands)
 
     def next(self):
+        
         for i, d in enumerate(self.datas):
             if self.getposition(d).size == 0:
                 if self.data.close[0] <= ((1 - PCT_DIP) * self.bbands_list[i].lines.bot[0]):
