@@ -3,7 +3,7 @@ Data should contain headers: Date | Open | High | Low | Close | Adj Close | Volu
 """
 import requests
 import pandas as pd
-import numpy as np
+import time
 
 def get_price_data(api_key, stock):
     """
@@ -53,19 +53,26 @@ if __name__ == '__main__':
     api_key = 'VHOI1ERJ34C0FKHZ'
 
     stock_list = [
-        'AAL', 'AAPL', 'AMZN', 'BA', 'BABA',
-        'BAC', 'BBY', 'C', 'CAH', 'CCL',
-        'COF', 'COP', 'CPB', 'CVS', 'CVX',
-        'DE', 'DIA', 'EEM', 'EWW', 'EWZ',
-        'F', 'FSLR', 'FXE', 'FXI', 'GLD',
-        'GPS', 'HD', 'IBB', 'IBM', 'IWM',
-        'JD', 'JNJ', 'JNK', 'JPM', 'K',
-        'KO', 'KR', 'LOW', 'LVS', 'M',
-        'MGM', 'MS', 'MSFT', 'NFLX', 'NKE',
-        'PYPL', 'QQQ', 'RACE', 'RSX', 'SLV',
-        'SPY', 'T', 'TBT', 'TGT', 'TLT',
-        'TSLA', 'TWTR', 'V', 'VXX', 'VZ',
-        'WFC', 'WMT', 'X', 'XLF', 'XLV']
+        'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
+        'BABA', 'BAC', 'BBY', 'BIDU', 'BLK',
+        'BOX', 'BX', 'C', 'CAH', 'CCL',
+        'CLX', 'COF', 'COP', 'COST', 'CPB',
+        'CRM', 'CVS', 'CVX', 'CZR', 'DAL',
+        'DE', 'DECK', 'DIA', 'DVN', 'EEM',
+        'EWW', 'EWZ', 'F', 'FB', 'FSLR',
+        'FXE', 'FXI', 'GE', 'GLD', 'GOOG',
+        'GPRO', 'GPS', 'HD', 'IBB',
+        'IBM', 'IBND', 'IWM', 'JD', 'JNJ',
+        'JNK', 'JPM', 'K', 'KHC', 'KO',
+        'KR', 'LOW', 'LVS', 'M', 'MGM',
+        'MS', 'MSFT', 'MU', 'NFLX', 'NKE',
+        'PFE', 'PYPL', 'QQQ', 'RACE', 'RSX',
+        'SLV', 'SPY', 'STMP', 'T', 'TBT',
+        'TGT', 'TLT', 'TSLA', 'TWTR', 'USO',
+        'V', 'VB', 'VXX', 'VZ', 'WFC',
+        'WMT', 'X', 'XLF',
+        'XLV', 'YELP'
+        ]
 
     for stock in stock_list:
 
@@ -74,6 +81,8 @@ if __name__ == '__main__':
         dataframe = create_dataframe(data)
 
         save_csv(dataframe, stock)
+
+        time.sleep(5) # To avoid the program from stopping
         
     ### API call on RUT not working ###
     # data = get_price_data(api_key, 'RUT')

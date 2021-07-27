@@ -9,6 +9,10 @@ from strategies.BuyTheDip1 import *
 from strategies.BollingerBands import *
 from strategies.MeanReversion import *
 import datetime
+import time
+
+# Time it
+start = time.time()
 
 # Define start year and ending year for our analysis
 FROM_YEAR = 2000
@@ -56,19 +60,26 @@ cerebro.addanalyzer(btanalyzers.VWR, _name='myvwr')
 
 # Create a Data Feed
 stock_list = [
-    'AAL', 'AAPL', 'AMZN', 'BA', 'BABA',
-    'BAC', 'BBY', 'C', 'CAH', 'CCL',
-    'COF', 'COP', 'CPB', 'CVS', 'CVX',
-    'DE', 'DIA', 'EEM', 'EWW', 'EWZ',
-    'F', 'FSLR', 'FXE', 'FXI', 'GLD',
-    'GPS', 'HD', 'IBB', 'IBM', 'IWM',
-    'JD', 'JNJ', 'JNK', 'JPM', 'K',
-    'KO', 'KR', 'LOW', 'LVS', 'M',
-    'MGM', 'MS', 'MSFT', 'NFLX', 'NKE',
-    'PYPL', 'QQQ', 'RACE', 'RSX', 'SLV',
-    'SPY', 'T', 'TBT', 'TGT', 'TLT',
-    'TSLA', 'TWTR', 'V', 'VXX', 'VZ',
-    'WFC', 'WMT', 'X', 'XLF', 'XLV']
+    'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
+    'BABA', 'BAC', 'BBY', 'BIDU', 'BLK',
+    'BOX', 'BX', 'C', 'CAH', 'CCL',
+    'CLX', 'COF', 'COP', 'COST', 'CPB',
+    'CRM', 'CVS', 'CVX', 'CZR', 'DAL',
+    'DE', 'DECK', 'DIA', 'DVN', 'EEM',
+    'EWW', 'EWZ', 'F', 'FB', 'FSLR',
+    'FXE', 'FXI', 'GE', 'GLD', 'GOOG',
+    'GPRO', 'GPS', 'HD', 'IBB',
+    'IBM', 'IBND', 'IWM', 'JD', 'JNJ',
+    'JNK', 'JPM', 'K', 'KHC', 'KO',
+    'KR', 'LOW', 'LVS', 'M', 'MGM',
+    'MS', 'MSFT', 'MU', 'NFLX', 'NKE',
+    'PFE', 'PYPL', 'QQQ', 'RACE', 'RSX',
+    'SLV', 'SPY', 'STMP', 'T', 'TBT',
+    'TGT', 'TLT', 'TSLA', 'TWTR', 'USO',
+    'V', 'VB', 'VXX', 'VZ', 'WFC',
+    'WMT', 'X', 'XLF',
+    'XLV', 'YELP'
+    ]
 
 for stock in stock_list:
 
@@ -85,7 +96,7 @@ for stock in stock_list:
     cerebro.adddata(data, name=stock)
 
 # Set our desired cash start
-cerebro.broker.setcash(6000.0)
+cerebro.broker.setcash(100000.0)
 
 # Print out results
 print("\n*** Results ***")
@@ -115,11 +126,43 @@ print("Average Gross: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl'
 print("Total Net: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['net']['total'])
 print("Average Net: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['net']['average'])
 
-print("*** Won ***")
-print("*** Lost ***")
-print("*** Long ***")
-print("*** Short ***")
-print("*** len ***")
+print("\n*** Won ***")
+print("Number of winners: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['won']['total'])
+print("Total profit - winners: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['won']['pnl']['total'])
+print("Average profit per winner: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['won']['pnl']['average'])
+print("Max profit: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['won']['pnl']['max'])
+
+print("\n*** Lost ***")
+print("Number of losers: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['lost']['total'])
+print("Total loss - losers: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['lost']['pnl']['total'])
+print("Average loss per loser: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['lost']['pnl']['average'])
+print("Max loss: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['lost']['pnl']['max'])
+total_accuracy = (backtest.analyzers.myanalyzer.get_analysis()['won']['total'] / (backtest.analyzers.myanalyzer.get_analysis()['won']['total'] + backtest.analyzers.myanalyzer.get_analysis()['lost']['total'])) * 100
+print("Total accuracy: %.2f" % total_accuracy, "%")
+
+print("\n*** Long Transactions ***")
+print("Number of long transactions: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['total'])
+print("Total PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['total'])
+print("Average PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['average'])
+print("Average loss: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['average'])
+print("Number of winners: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['won'])
+print("Number of Losers: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['lost'])
+long_accuracy = (backtest.analyzers.myanalyzer.get_analysis()['long']['won'] / (backtest.analyzers.myanalyzer.get_analysis()['long']['won'] + backtest.analyzers.myanalyzer.get_analysis()['long']['lost'])) * 100
+print("Long accuracy: %.2f" % long_accuracy, "%")
+
+
+print("\n*** Short Transactions ***")
+print("Number of short transactions: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['total'])
+print("Total PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['total'])
+print("Average PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['average'])
+print("Average loss: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['average'])
+print("Number of winners: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['won'])
+print("Number of Losers: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['lost'])
+short_accuracy = 0
+print("Short accuracy: %.2f" % short_accuracy, "%")
+
+print("\n*** len ***")
+#print(backtest.analyzers.myanalyzer.get_analysis()['len'])
 
 # Analysis
 print("\n*** Analysis ***")
@@ -139,3 +182,7 @@ if transactions:
         print("Date:", key.date(), "| Symbol:", backtest.analyzers.mytransactions.get_analysis()[key][0][3], "| Price:%.2f" % backtest.analyzers.mytransactions.get_analysis()[key][0][1], "| Type:", ["Buy" if  x < 0 else "Sell" for x in [backtest.analyzers.mytransactions.get_analysis()[key][0][4]]][0], "| N_Shares:", backtest.analyzers.mytransactions.get_analysis()[key][0][0])
 else:
     print("Transactions not printed")
+
+end = time.time()
+time_elapsed = end - start
+print(f"The program took {round(time_elapsed, 2)} seconds to execute")
