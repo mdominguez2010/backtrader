@@ -9,9 +9,9 @@ import backtrader as bt
 class MeanReversion(bt.Strategy):
     
     params = (
-        ('period', 30),
+        ('period', 20),
         ('order_percentage', 0.05),
-        ('dip_size', 0.05),
+        ('dip_size', 0.025),
     )
 
     def __init__(self):

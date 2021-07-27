@@ -122,8 +122,6 @@ print("Current win streak: ", backtest.analyzers.myanalyzer.get_analysis()['stre
 print("Longest win streak: ", backtest.analyzers.myanalyzer.get_analysis()['streak']['won']['longest'])
 
 print("\n*** PnL ***")
-print("Total Gross: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['gross']['total'])
-print("Average Gross: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['gross']['average'])
 print("Total Net: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['net']['total'])
 print("Average Net: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['pnl']['net']['average'])
 

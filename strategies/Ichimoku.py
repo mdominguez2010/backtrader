@@ -1,11 +1,11 @@
 """
 Momentum
+Nice small drawdown
 Ichimoku cloud break out strategy
 """
 
 import math
 import backtrader as bt
-from backtrader.indicators.basicops import Highest, Lowest
 
 class Ichimoku(bt.Strategy):
 
