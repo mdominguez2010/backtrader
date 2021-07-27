@@ -1,4 +1,5 @@
 """
+Momentum
 This is a good strategy for bull markets
 """
 
@@ -36,7 +37,7 @@ class GoldenCross(bt.Strategy):
             )
     
     def next(self):
-        
+
         for i, d in enumerate(self.datas):
             if self.getposition(d).size == 0:
                 if self.crossovers[i] > 0:

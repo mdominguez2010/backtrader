@@ -1,4 +1,5 @@
 """
+Mean Reversion
 A type of mean reversion using Bollinger Bands
 """
 
@@ -13,7 +14,7 @@ class BollingerBands(bt.Strategy):
     params = {
         ('period', 20),
         ('devfactor', 2.0),
-        ('order_percentage', 0.05)
+        ('order_percentage', 0.01)
     }
 
     def __init__(self):
@@ -32,7 +33,7 @@ class BollingerBands(bt.Strategy):
             self.bbands_list.append(self.bbands)
 
     def next(self):
-        
+
         for i, d in enumerate(self.datas):
             if self.getposition(d).size == 0:
                 if self.data.close[0] <= ((1 - PCT_DIP) * self.bbands_list[i].lines.bot[0]):

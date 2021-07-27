@@ -63,7 +63,7 @@ cerebro.addanalyzer(btanalyzers.SQN, _name='mysqn')
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
-# stock_list = ['WFC']
+# stock_list = ['AAPL']
 stock_list = [
     'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
     'BABA', 'BAC', 'BBY', 'BIDU', 'BLK',
@@ -82,8 +82,7 @@ stock_list = [
     'SLV', 'SPY', 'STMP', 'T', 'TBT',
     'TGT', 'TLT', 'TSLA', 'TWTR', 'USO',
     'V', 'VB', 'VXX', 'VZ', 'WFC',
-    'WMT', 'X', 'XLF',
-    'XLV', 'YELP'
+    'WMT', 'X', 'XLF', 'XLV', 'YELP'
     ]
 
 for stock in stock_list:
@@ -115,7 +114,7 @@ backtest = backtest[0]
 # Final Results
 print('Final Portfolio Value: %.3f' % cerebro.broker.getvalue())
 ending_cash = cerebro.broker.getvalue()
-print(f"Total profit: %.3f" % (ending_cash - beginning_cash))
+print(f"Total profit (inc. Unrealized Gain/Loss): %.3f" % (ending_cash - beginning_cash))
 print(backtest.analyzers.myanalyzer.get_analysis()['total']['total'], 'total transactions,', backtest.analyzers.myanalyzer.get_analysis()['total']['open'], 'open,', backtest.analyzers.myanalyzer.get_analysis()['total']['closed'], 'closed\n')
 
 print("*** Streak ***")
@@ -143,25 +142,25 @@ total_accuracy = (backtest.analyzers.myanalyzer.get_analysis()['won']['total'] /
 print("Total accuracy: %.2f" % total_accuracy, "%")
 
 print("\n*** Long Transactions ***")
-print("Number of long transactions: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['total'])
-print("Total PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['total'])
-print("Average PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['average'])
-print("Average loss: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['average'])
-print("Number of winners: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['won'])
-print("Number of Losers: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['lost'])
-long_accuracy = (backtest.analyzers.myanalyzer.get_analysis()['long']['won'] / (backtest.analyzers.myanalyzer.get_analysis()['long']['won'] + backtest.analyzers.myanalyzer.get_analysis()['long']['lost'])) * 100
-print("Long accuracy: %.2f" % long_accuracy, "%")
+# print("Number of long transactions: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['total'])
+# print("Total PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['total'])
+# print("Average PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['average'])
+# print("Average loss: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['long']['pnl']['average'])
+# print("Number of winners: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['won'])
+# print("Number of Losers: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['long']['lost'])
+# long_accuracy = (backtest.analyzers.myanalyzer.get_analysis()['long']['won'] / (backtest.analyzers.myanalyzer.get_analysis()['long']['won'] + backtest.analyzers.myanalyzer.get_analysis()['long']['lost'])) * 100
+# print("Long accuracy: %.2f" % long_accuracy, "%")
 
 
 print("\n*** Short Transactions ***")
-print("Number of short transactions: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['total'])
-print("Total PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['total'])
-print("Average PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['average'])
-print("Average loss: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['average'])
-print("Number of winners: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['won'])
-print("Number of Losers: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['lost'])
-short_accuracy = 0
-print("Short accuracy: %.2f" % short_accuracy, "%")
+# print("Number of short transactions: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['total'])
+# print("Total PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['total'])
+# print("Average PnL: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['average'])
+# print("Average loss: %.2f" % backtest.analyzers.myanalyzer.get_analysis()['short']['pnl']['average'])
+# print("Number of winners: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['won'])
+# print("Number of Losers: %.0f" % backtest.analyzers.myanalyzer.get_analysis()['short']['lost'])
+# short_accuracy = 0
+# print("Short accuracy: %.2f" % short_accuracy, "%")
 
 print("\n*** len ***")
 #print(backtest.analyzers.myanalyzer.get_analysis()['len'])
