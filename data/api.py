@@ -91,8 +91,4 @@ if __name__ == '__main__':
     run_time = end - start
 
     print("\nProgram run time: %.2f" % run_time, "seconds\n")
-        
-    ### API call on RUT not working ###
-    # data = get_price_data(api_key, 'RUT')
-    # print(data)
 
