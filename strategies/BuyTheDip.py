@@ -5,8 +5,7 @@ Sell after desired number of days.
 
 import backtrader as bt
 
-STOCK = 'SPY'
-N_DAYS_HOLD = 5
+N_DAYS_HOLD = 3
 
 class BuyTheDip(bt.Strategy):
 

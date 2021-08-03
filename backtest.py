@@ -20,34 +20,38 @@ plot = False
 # Define start year and ending year for our analysis
 FROM_YEAR = 2000
 TO_YEAR = 2021
+STRATEGY = [Ichimoku]
 
-# Adds an argument to bash command 
-strategies = {
-    "golden_cross": GoldenCross,
-    "buy_hold": BuyHold,
-    "buy_dip": BuyTheDip,
-    "ichimoku": Ichimoku,
-    "bbands": BollingerBands,
-    "mean_reversion": MeanReversion
-}
 
-parser = argparse.ArgumentParser()
-parser.add_argument("strategy", help="which strategy to run", type=str)
-args = parser.parse_args()
+# # Adds an argument to bash command 
+# strategies = {
+#     "golden_cross": GoldenCross,
+#     "buy_hold": BuyHold,
+#     "buy_dip": BuyTheDip,
+#     "ichimoku": Ichimoku,
+#     "bbands": BollingerBands,
+#     "mean_reversion": MeanReversion,
+#     "momentum": Momentum
+# }
 
-if not args.strategy in strategies:
-    print("Invalid strategy and/or stock, must be one of {}".format(strategies.keys()))
-    sys.exit()
+# parser = argparse.ArgumentParser()
+# parser.add_argument("strategy", help="which strategy to run", type=str)
+# args = parser.parse_args()
 
-# Argument affects the strategy type
-STRATEGY = strategies[args.strategy]
-#DATAPATH = './data/{}.csv'.format(STOCK)
+# if not args.strategy in strategies:
+#     print("Invalid strategy and/or stock, must be one of {}".format(strategies.keys()))
+#     sys.exit()
+
+# # Argument affects the strategy type
+# STRATEGY = strategies[args.strategy]
+
 
 # Create a cerebro entity
 cerebro = bt.Cerebro()
 
-# Add a strategy
-cerebro.addstrategy(STRATEGY)
+# Add a strategy(ies)
+for strategy in STRATEGY:
+    cerebro.addstrategy(strategy)
 
 # Add analyzers
 cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
@@ -63,27 +67,27 @@ cerebro.addanalyzer(btanalyzers.SQN, _name='mysqn')
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
-# stock_list = ['AAPL']
-stock_list = [
-    'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
-    'BABA', 'BAC', 'BBY', 'BIDU', 'BLK',
-    'BOX', 'BX', 'C', 'CAH', 'CCL',
-    'CLX', 'COF', 'COP', 'COST', 'CPB',
-    'CRM', 'CVS', 'CVX', 'CZR', 'DAL',
-    'DE', 'DECK', 'DIA', 'DVN', 'EEM',
-    'EWW', 'EWZ', 'F', 'FB', 'FSLR',
-    'FXE', 'FXI', 'GE', 'GLD', 'GOOG',
-    'GPRO', 'GPS', 'HD', 'IBB',
-    'IBM', 'IBND', 'IWM', 'JD', 'JNJ',
-    'JNK', 'JPM', 'K', 'KHC', 'KO',
-    'KR', 'LOW', 'LVS', 'M', 'MGM',
-    'MS', 'MSFT', 'MU', 'NFLX', 'NKE',
-    'PFE', 'PYPL', 'QQQ', 'RACE', 'RSX',
-    'SLV', 'SPY', 'STMP', 'T', 'TBT',
-    'TGT', 'TLT', 'TSLA', 'TWTR', 'USO',
-    'V', 'VB', 'VXX', 'VZ', 'WFC',
-    'WMT', 'X', 'XLF', 'XLV', 'YELP'
-    ]
+stock_list = ['MSFT']
+# stock_list = [
+#     'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
+#     'BABA', 'BAC', 'BBY', 'BIDU', 'BLK',
+#     'BOX', 'BX', 'C', 'CAH', 'CCL',
+#     'CLX', 'COF', 'COP', 'COST', 'CPB',
+#     'CRM', 'CVS', 'CVX', 'CZR', 'DAL',
+#     'DE', 'DECK', 'DIA', 'DVN', 'EEM',
+#     'EWW', 'EWZ', 'F', 'FB', 'FSLR',
+#     'FXE', 'FXI', 'GE', 'GLD', 'GOOG',
+#     'GPRO', 'GPS', 'HD', 'IBB',
+#     'IBM', 'IBND', 'IWM', 'JD', 'JNJ',
+#     'JNK', 'JPM', 'K', 'KHC', 'KO',
+#     'KR', 'LOW', 'LVS', 'M', 'MGM',
+#     'MS', 'MSFT', 'MU', 'NFLX', 'NKE',
+#     'PFE', 'PYPL', 'QQQ', 'RACE', 'RSX',
+#     'SLV', 'SPY', 'STMP', 'T', 'TBT',
+#     'TGT', 'TLT', 'TSLA', 'TWTR', 'USO',
+#     'V', 'VB', 'VXX', 'VZ', 'WFC',
+#     'WMT', 'X', 'XLF', 'XLV', 'YELP'
+#     ]
 
 for stock in stock_list:
 
