@@ -12,7 +12,6 @@ import argparse
 import datetime
 import glob
 import os.path
-
 import backtrader as bt
 
 class NetPayOutData(bt.feeds.GenericCSVData):
@@ -76,19 +75,19 @@ class St(bt.Strategy):
         # remove those no longer top ranked
         # do this first to issue sell orders and free cash
         for d in (d for d in posdata if d not in rtop):
-            self.log('Leave {} - Rank {:.2f}'.format(d._name, rbot[d][0]))
+            # self.log('Leave {} - Rank {:.2f}'.format(d._name, rbot[d][0]))
             self.order_target_percent(d, target=0.0)
 
         # rebalance those already top ranked and still there
         for d in (d for d in posdata if d in rtop):
-            self.log('Rebal {} - Rank {:.2f}'.format(d._name, rtop[d][0]))
+            # self.log('Rebal {} - Rank {:.2f}'.format(d._name, rtop[d][0]))
             self.order_target_percent(d, target=self.perctarget)
             del rtop[d]  # remove it, to simplify next iteration
 
         # issue a target order for the newly top ranked stocks
         # do this last, as this will generate buy orders consuming cash
         for d in rtop:
-            self.log('Enter {} - Rank {:.2f}'.format(d._name, rtop[d][0]))
+            # self.log('Enter {} - Rank {:.2f}'.format(d._name, rtop[d][0]))
             self.order_target_percent(d, target=self.perctarget)
 
 
@@ -120,12 +119,13 @@ def run(args=None):
 
     # set the cash
     cerebro.broker.setcash(args.cash)
+    print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
     cerebro.run()  # execute it all
 
     # Basic performance evaluation ... final value ... minus starting cash
     pnl = cerebro.broker.get_value() - args.cash
-    print('Profit ... or Loss: {:.2f}'.format(pnl))
+    print("PnL: {:.2f}".format(pnl))
 
 
 def parse_args(pargs=None):

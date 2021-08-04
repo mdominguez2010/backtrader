@@ -3,6 +3,7 @@ Data should contain headers: Date | Open | High | Low | Close | Adj Close | Volu
 """
 import requests
 import pandas as pd
+import datetime
 import time
 
 def get_price_data(api_key, stock):
@@ -25,15 +26,20 @@ def create_dataframe(data):
     dataframe = pd.DataFrame(columns=['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'])
 
     for key in data["Time Series (Daily)"].keys():
+
+        #key = datetime.datetime.strptime(key, '%Y-%m-%d')
+
         dataframe = dataframe.append(
             pd.Series(
-                [key,
-                data["Time Series (Daily)"][key]["1. open"],
-                data["Time Series (Daily)"][key]["2. high"],
-                data["Time Series (Daily)"][key]["3. low"],
-                data["Time Series (Daily)"][key]["4. close"],
-                data["Time Series (Daily)"][key]["5. adjusted close"],
-                data["Time Series (Daily)"][key]["6. volume"]], index=dataframe.columns
+                [
+                    datetime.datetime.strptime(key, '%Y-%m-%d'),
+                    data["Time Series (Daily)"][key]["1. open"],
+                    data["Time Series (Daily)"][key]["2. high"],
+                    data["Time Series (Daily)"][key]["3. low"],
+                    data["Time Series (Daily)"][key]["4. close"],
+                    data["Time Series (Daily)"][key]["5. adjusted close"],
+                    data["Time Series (Daily)"][key]["6. volume"]
+                ], index=dataframe.columns
             ), ignore_index=True
         )
 
@@ -53,6 +59,8 @@ if __name__ == '__main__':
     start = time.time()
 
     api_key = 'VHOI1ERJ34C0FKHZ'
+
+    # stock_list = ['AAL']
 
     stock_list = [
         'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
