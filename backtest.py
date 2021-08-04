@@ -20,7 +20,7 @@ plot = False
 # Define start year and ending year for our analysis
 FROM_YEAR = 2000
 TO_YEAR = 2021
-STRATEGY = [Ichimoku]
+STRATEGY = [Ichimoku, GoldenCross]
 
 
 # # Adds an argument to bash command 
@@ -55,7 +55,6 @@ for strategy in STRATEGY:
 
 # Add analyzers
 cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
-cerebro.addanalyzer(btanalyzers.AnnualReturn, _name='myannualreturn')
 cerebro.addanalyzer(btanalyzers.Returns, _name='myreturn')
 cerebro.addanalyzer(btanalyzers.DrawDown, _name='mydrawdown')
 cerebro.addanalyzer(btanalyzers.Transactions, _name='mytransactions')
@@ -67,27 +66,27 @@ cerebro.addanalyzer(btanalyzers.SQN, _name='mysqn')
 # cerebro.addsizer(bt.sizers.FixedSize, stake=100)
 
 # Create a Data Feed
-stock_list = ['MSFT']
-# stock_list = [
-#     'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
-#     'BABA', 'BAC', 'BBY', 'BIDU', 'BLK',
-#     'BOX', 'BX', 'C', 'CAH', 'CCL',
-#     'CLX', 'COF', 'COP', 'COST', 'CPB',
-#     'CRM', 'CVS', 'CVX', 'CZR', 'DAL',
-#     'DE', 'DECK', 'DIA', 'DVN', 'EEM',
-#     'EWW', 'EWZ', 'F', 'FB', 'FSLR',
-#     'FXE', 'FXI', 'GE', 'GLD', 'GOOG',
-#     'GPRO', 'GPS', 'HD', 'IBB',
-#     'IBM', 'IBND', 'IWM', 'JD', 'JNJ',
-#     'JNK', 'JPM', 'K', 'KHC', 'KO',
-#     'KR', 'LOW', 'LVS', 'M', 'MGM',
-#     'MS', 'MSFT', 'MU', 'NFLX', 'NKE',
-#     'PFE', 'PYPL', 'QQQ', 'RACE', 'RSX',
-#     'SLV', 'SPY', 'STMP', 'T', 'TBT',
-#     'TGT', 'TLT', 'TSLA', 'TWTR', 'USO',
-#     'V', 'VB', 'VXX', 'VZ', 'WFC',
-#     'WMT', 'X', 'XLF', 'XLV', 'YELP'
-#     ]
+# stock_list = ['MSFT', 'SPY']
+stock_list = [
+    'AAL', 'AAPL', 'AMD', 'AMZN', 'BA',
+    'BABA', 'BAC', 'BBY', 'BIDU', 'BLK',
+    'BOX', 'BX', 'C', 'CAH', 'CCL',
+    'CLX', 'COF', 'COP', 'COST', 'CPB',
+    'CRM', 'CVS', 'CVX', 'CZR', 'DAL',
+    'DE', 'DECK', 'DIA', 'DVN', 'EEM',
+    'EWW', 'EWZ', 'F', 'FB', 'FSLR',
+    'FXE', 'FXI', 'GE', 'GLD', 'GOOG',
+    'GPRO', 'GPS', 'HD', 'IBB',
+    'IBM', 'IBND', 'IWM', 'JD', 'JNJ',
+    'JNK', 'JPM', 'K', 'KHC', 'KO',
+    'KR', 'LOW', 'LVS', 'M', 'MGM',
+    'MS', 'MSFT', 'MU', 'NFLX', 'NKE',
+    'PFE', 'PYPL', 'QQQ', 'RACE', 'RSX',
+    'SLV', 'SPY', 'STMP', 'T', 'TBT',
+    'TGT', 'TLT', 'TSLA', 'TWTR', 'USO',
+    'V', 'VB', 'VXX', 'VZ', 'WFC',
+    'WMT', 'X', 'XLF', 'XLV', 'YELP'
+    ]
 
 for stock in stock_list:
 
@@ -96,7 +95,7 @@ for stock in stock_list:
         # Do not pass values before this date
         fromdate=datetime.datetime(FROM_YEAR, 1, 1),
         # Do not pass values before this date
-        todate=datetime.datetime(TO_YEAR, 7, 26),
+        todate=datetime.datetime(TO_YEAR, 8, 2),
         # Do not pass values after this date
         reverse=False)
 

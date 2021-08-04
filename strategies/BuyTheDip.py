@@ -24,10 +24,11 @@ class BuyTheDip(bt.Strategy):
             return
 
         if order.status in [order.Completed]:
-            if order.isbuy():
-                self.log("BUY EXECUTED {}".format(order.executed.price))
-            elif order.issell():
-                self.log("SELL EXECUTED {}".format(order.executed.price))
+            # if order.isbuy():
+                #self.log("BUY EXECUTED {}".format(order.executed.price))
+            
+            # elif order.issell():
+                #self.log("SELL EXECUTED {}".format(order.executed.price))
 
             self.bar_executed = len(self)
 
@@ -35,7 +36,7 @@ class BuyTheDip(bt.Strategy):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log('Close, %.2f' % self.dataclose[0])
+        # self.log('Close, %.2f' % self.dataclose[0])
 
         if self.order:
             return
@@ -50,10 +51,10 @@ class BuyTheDip(bt.Strategy):
                     if self.dataclose[-2] < self.dataclose[-3]:
 
                         # BUY, BUY, BUY!!! (with all possible default parameters)
-                        self.log('BUY CREATE, %.2f' % self.dataclose[0])
+                        # self.log('BUY CREATE, %.2f' % self.dataclose[0])
                         self.order = self.buy()
 
         else:
             if len(self) >= (self.bar_executed + N_DAYS_HOLD):
-                self.log("SELL CREATED {}".format(self.dataclose[0]))
+                # self.log("SELL CREATED {}".format(self.dataclose[0]))
                 self.order = self.sell()

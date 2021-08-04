@@ -13,6 +13,7 @@ import datetime
 import glob
 import os.path
 import backtrader as bt
+import backtrader.analyzers as btanalyzers
 
 class NetPayOutData(bt.feeds.GenericCSVData):
     lines = ('npy',)  # add a line containing the net payout yield
@@ -91,6 +92,56 @@ class St(bt.Strategy):
             self.order_target_percent(d, target=self.perctarget)
 
 
+def add_analyzers(cerebro):
+
+    # Add analyzers
+    analyzers_dict = {
+        btanalyzers.SharpeRatio: 'mysharpe',
+        btanalyzers.AnnualReturn: 'myannualreturn',
+        btanalyzers.Returns: 'myreturn',
+        btanalyzers.DrawDown: 'mydrawdown',
+        btanalyzers.Transactions: 'mytransactions',
+        btanalyzers.TradeAnalyzer: 'myanalyzer',
+        btanalyzers.VWR: 'myvwr',
+        btanalyzers.SQN: 'mysqn'
+    }
+    
+    for key in analyzers_dict.keys():
+        cerebro.addanalyzer(key, _name=analyzers_dict[key])
+    
+    return cerebro
+
+def print_analyzers(analysis):
+
+    print("\n*** Analysis ***")
+    print("Sharpe Ratio: %.3f" % analysis.analyzers.mysharpe.get_analysis()['sharperatio'])
+    print("Variability-Weighted Return: %.3f" % analysis.analyzers.myvwr.get_analysis()['vwr'])
+    print("Mean annual return (pct): %.2f" % analysis.analyzers.myreturn.get_analysis()['rnorm100'], "%")
+    print("Max drawdown (pct): %.2f" % analysis.analyzers.mydrawdown.get_analysis()['max']['drawdown'], "%")
+    print("Max drawdown ($): %.0f" % analysis.analyzers.mydrawdown.get_analysis()['max']['moneydown'])
+    print("Max drawdown length (days): %.0f" % analysis.analyzers.mydrawdown.get_analysis()['max']['len'])
+    print("SQN: %.3f" % analysis.analyzers.mysqn.get_analysis()['sqn']) # As defined by Van K: scaled of 1 (below avg) to 7 (Holy Grail)
+
+    print("\n*** PnL ***")
+    print("Total Net: %.2f" % analysis.analyzers.myanalyzer.get_analysis()['pnl']['net']['total'])
+    print("Average Net: %.2f" % analysis.analyzers.myanalyzer.get_analysis()['pnl']['net']['average'])
+
+    print("\n*** Won ***")
+    print("Number of winners: %.0f" % analysis.analyzers.myanalyzer.get_analysis()['won']['total'])
+    print("Total profit - winners: %.2f" % analysis.analyzers.myanalyzer.get_analysis()['won']['pnl']['total'])
+    print("Average profit per winner: %.2f" % analysis.analyzers.myanalyzer.get_analysis()['won']['pnl']['average'])
+    print("Max profit: %.2f" % analysis.analyzers.myanalyzer.get_analysis()['won']['pnl']['max'])
+
+    print("\n*** Lost ***")
+    print("Number of losers: %.0f" % analysis.analyzers.myanalyzer.get_analysis()['lost']['total'])
+    print("Total loss - losers: %.2f" % analysis.analyzers.myanalyzer.get_analysis()['lost']['pnl']['total'])
+    print("Average loss per loser: %.2f" % analysis.analyzers.myanalyzer.get_analysis()['lost']['pnl']['average'])
+    print("Max loss: %.2f" % analysis.analyzers.myanalyzer.get_analysis()['lost']['pnl']['max'])
+    total_accuracy = (analysis.analyzers.myanalyzer.get_analysis()['won']['total'] / (analysis.analyzers.myanalyzer.get_analysis()['won']['total'] + analysis.analyzers.myanalyzer.get_analysis()['lost']['total'])) * 100
+    print("Total accuracy: %.2f" % total_accuracy, "%")
+
+
+
 def run(args=None):
     args = parse_args(args)
 
@@ -117,16 +168,24 @@ def run(args=None):
     # add strategy
     cerebro.addstrategy(St, **eval('dict(' + args.strat + ')'))
 
+    # add analyzers
+    add_analyzers(cerebro)
+
     # set the cash
     cerebro.broker.setcash(args.cash)
-    print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    print('\nStarting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
-    cerebro.run()  # execute it all
+    backtest = cerebro.run()  # execute it all
+    analysis = backtest[0] # to perform analysis
 
     # Basic performance evaluation ... final value ... minus starting cash
     pnl = cerebro.broker.get_value() - args.cash
-    print("PnL: {:.2f}".format(pnl))
+    print("Ending Portfolio Value: %.2f" % cerebro.broker.get_value())
+    print("PnL (inc. Unrealized Gain/Loss): {:.2f}".format(pnl))
+    print(analysis.analyzers.myanalyzer.get_analysis()['total']['total'], 'total transactions,', analysis.analyzers.myanalyzer.get_analysis()['total']['open'], 'open,', analysis.analyzers.myanalyzer.get_analysis()['total']['closed'], 'closed\n')
 
+    # print analyzers
+    print_analyzers(analysis)
 
 def parse_args(pargs=None):
     parser = argparse.ArgumentParser(
@@ -150,7 +209,7 @@ def parse_args(pargs=None):
     parser.add_argument('--cerebro', required=False, default='',
                         metavar='kwargs', help='kwargs in k1=v1,k2=v2 format')
 
-    parser.add_argument('--cash', default=1000000.0, type=float,
+    parser.add_argument('--cash', default=100000.0, type=float,
                         metavar='kwargs', help='kwargs in k1=v1,k2=v2 format')
 
     parser.add_argument('--strat', required=False, default='',
