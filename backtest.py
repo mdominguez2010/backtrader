@@ -91,7 +91,7 @@ stock_list = [
 for stock in stock_list:
 
     data = bt.feeds.YahooFinanceCSVData(
-        dataname='./data/{}.csv'.format(stock),
+        dataname='./data/daily/{}.csv'.format(stock),
         # Do not pass values before this date
         fromdate=datetime.datetime(FROM_YEAR, 1, 1),
         # Do not pass values before this date

@@ -27,7 +27,7 @@ class NetPayOutData(bt.feeds.GenericCSVData):
 
 class St(bt.Strategy):
     params = dict(
-        selcperc=0.50,  # percentage of stocks to select from the universe
+        selcperc=0.10,  # percentage of stocks to select from the universe
         rperiod=1,  # period for the returns calculation, default 1 period
         vperiod=36,  # lookback period for volatility - default 36 periods
         mperiod=12,  # lookback period for momentum - default 12 periods
@@ -209,7 +209,7 @@ def parse_args(pargs=None):
     parser.add_argument('--cerebro', required=False, default='',
                         metavar='kwargs', help='kwargs in k1=v1,k2=v2 format')
 
-    parser.add_argument('--cash', default=100000.0, type=float,
+    parser.add_argument('--cash', default=6000.0, type=float,
                         metavar='kwargs', help='kwargs in k1=v1,k2=v2 format')
 
     parser.add_argument('--strat', required=False, default='',
