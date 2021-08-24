@@ -20,7 +20,7 @@ plot = False
 # Define start year and ending year for our analysis
 FROM_YEAR = 2000
 TO_YEAR = 2021
-STRATEGY = [Ichimoku, GoldenCross, BollingerBands, MeanReversion]
+STRATEGY = [GoldenCross]
 
 
 # # Adds an argument to bash command 
