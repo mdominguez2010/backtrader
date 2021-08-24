@@ -96,7 +96,7 @@ def save_csv(dataframe, stock, daily=True):
     Daily data is saved in 'daily' and monthly data in 'monthly'
     """
     if daily:
-        dataframe.to_csv(f"./data/{stock}.csv", index=False)
+        dataframe.to_csv(f"./data/daily/{stock}.csv", index=False)
     else:
         dataframe.to_csv(f"./data/monthly/{stock}.csv", index=False)
 
